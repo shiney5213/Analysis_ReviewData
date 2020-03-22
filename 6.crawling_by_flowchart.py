@@ -350,13 +350,14 @@ if __name__=='__main__':
 		start_crwarling(k, forpet_hash, shop_name, shop_address)
 		
 		print('\n')
+		time.sleep(1)
 		try:
 			back_button = driver.find_element_by_xpath('//button[@class="ozj7Vb3wnYq__action-button-clickable"]')
 			back_button.click()
 		except:
 			pass
-		
-		if k % 2 == 0:
+		time.sleep(2)
+		if k % 100 == 0:
 			match_total_table.to_csv('./data/match_total_table.csv')
 			not_match_total_table.to_csv('./data/not_match_total_table.csv')
 			match_review_table.to_csv('./data/match_review_table.csv')
