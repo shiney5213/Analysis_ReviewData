@@ -320,7 +320,7 @@ def not_info_table_insert(not_info_table, forpet_hash, shop_name, match):
 
 
 if __name__=='__main__':
-	ordinary_table = pd.read_csv('mysql_forpet_shop.csv', index_col = 0)
+	ordinary_table = pd.read_csv('./data/mysql_forpet_shop.csv', index_col = 0)
 	not_match_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
 	match_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
 	x_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
@@ -357,13 +357,13 @@ if __name__=='__main__':
 			pass
 		
 		if k % 2 == 0:
-			match_total_table.to_csv('match_total_table.csv')
-			not_match_total_table.to_csv('not_match_total_table.csv')
-			match_review_table.to_csv('match_review_table.csv')
-			not_match_review_table.to_csv('not_match_review_table.csv')
-			x_total_table.to_csv('x_total_table.csv')
-			x_review_table.to_csv('x_review_table.csv')
-			not_info_table.to_csv('not_info_table.csv')        
+			match_total_table.to_csv('./data/match_total_table.csv')
+			not_match_total_table.to_csv('./data/not_match_total_table.csv')
+			match_review_table.to_csv('./data/match_review_table.csv')
+			not_match_review_table.to_csv('./data/not_match_review_table.csv')
+			x_total_table.to_csv('./data/x_total_table.csv')
+			x_review_table.to_csv('./data/x_review_table.csv')
+			not_info_table.to_csv('./data/not_info_table.csv')        
 
 
 
