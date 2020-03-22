@@ -348,23 +348,17 @@ if __name__=='__main__':
 		shop_address =address_name.split(' ')[1:]
 		shop_name = place_name.replace(' ','')
 		start_crwarling(k, forpet_hash, shop_name, shop_address)
-		
 		print('\n')
-		try:
-			back_button = driver.find_element_by_xpath('//button[@class="ozj7Vb3wnYq__action-button-clickable"]')
-			back_button.click()
-		except:
-			pass
-		
-		if k % 2 == 0:
+    driver.back()
+
+		if k % 100 == 0:
 			match_total_table.to_csv('./data/match_total_table.csv')
 			not_match_total_table.to_csv('./data/not_match_total_table.csv')
 			match_review_table.to_csv('./data/match_review_table.csv')
 			not_match_review_table.to_csv('./data/not_match_review_table.csv')
 			x_total_table.to_csv('./data/x_total_table.csv')
 			x_review_table.to_csv('./data/x_review_table.csv')
-			not_info_table.to_csv('./data/not_info_table.csv')        
+			not_info_table.to_csv('./data/not_info_table.csv')  
 
-
-
+    
 	
