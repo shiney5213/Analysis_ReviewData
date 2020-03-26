@@ -87,7 +87,7 @@ def get_review(html):
 
 def start_crwarling(k, forpet_hash,shop_name, shop_address):
     print(k, shop_name, shop_address)
-
+    time.sleep(1)
 	# shop 이름 입력
     try:
         element = driver.find_element_by_xpath('//input[@autofocus="autofocus"]')
@@ -360,7 +360,7 @@ if __name__=='__main__':
 			print('\n')
 			driver.back()
 
-	if k % 100 == 0:
+	if k % 30 == 0:
 		match_total_table.to_csv('./data/match_total_table.csv')
 		not_match_total_table.to_csv('./data/not_match_total_table.csv')
 		match_review_table.to_csv('./data/match_review_table.csv')
