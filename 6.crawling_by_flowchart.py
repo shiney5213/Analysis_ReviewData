@@ -87,6 +87,7 @@ def get_review(html):
 
 def start_crwarling(k, forpet_hash,shop_name, shop_address):
     print(k, shop_name, shop_address)
+    time.sleep(1)
 
     # shop 이름 입력
     element = driver.find_element_by_xpath('//input[@autofocus="autofocus"]')
@@ -136,7 +137,7 @@ def start_crwarling(k, forpet_hash,shop_name, shop_address):
                 review_list = ''
                 score_list = ''
            
-            save_dataframe(forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match)
+            save_dataframe(k, forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match)
         
             time.sleep(SCROLL_PAUSE_TIME)
             driver.back()  
@@ -148,8 +149,8 @@ def start_crwarling(k, forpet_hash,shop_name, shop_address):
         search_name, address, total_score, review_list, score_list, match =get_info(html, shop_name, shop_address)
         print(f'shop 1개, {search_name}, {address}, {match} ')
         
-        save_dataframe(forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match)
-    driver.back()  
+        save_dataframe(k, forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match)
+
 
 # 여러개의  shop 목록에서 주소로 찾기
 def find_shop_by_name(select_shop_html, shop_name):
@@ -159,11 +160,11 @@ def find_shop_by_name(select_shop_html, shop_name):
     
     shop_select_dict = {}
     for i, shop in enumerate(all_shop_name):
-        include_word = ['동물', '펫', '애견', 'dot','cat','도그','캣','pet','야옹','멍멍']
+        include_word = ['동물', '펫', '애견', 'dot','cat','도그','캣','pet','야옹','멍', '개','강아지','고양이']
         name_include_word = sum([ word in shop.text  for word in include_word]) 
         
         # 이름이 같은 경우
-        if shop_name == shop.text :
+        if (shop_name in shop.text) or shop.text in shop_name :
             shop_select_dict[str(i+1)] = [shop.text, 'same_name']  
         # 이름이 비슷한 경우
         elif name_include_word >= 1:
@@ -245,11 +246,11 @@ def get_totalScore(html,shop_name, shop_address):
     
     return search_name, address, total_score, match
 
-def save_dataframe(forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match):
+def save_dataframe(k, forpet_hash, search_name, shop_address, address, total_score, review_list, score_list, match):
     
     # shop 정보가 없는 경우
     if address == '':
-        not_info_table_insert(not_info_table, forpet_hash, search_name, match)
+        not_info_table_insert(k, not_info_table, forpet_hash, search_name, match)
     
     # shop 정보가 있는 경우
     else:
@@ -267,43 +268,43 @@ def save_dataframe(forpet_hash, search_name, shop_address, address, total_score,
             table_total = not_match_total_table
             table_review = not_match_review_table
 
-        total_table_insert(table_total, forpet_hash, search_name, shop_address, address, total_score, review_list, match)
-        review_table_insert(table_review, forpet_hash, search_name, shop_address, address, review_list, score_list, match)   
+        total_table_insert(k, table_total, forpet_hash, search_name, shop_address, address, total_score, review_list, match)
+        review_table_insert(k, table_review, forpet_hash, search_name, shop_address, address, review_list, score_list, match)   
 	
 
-def total_table_insert(total_table, forpet_hash, search_name, shop_address, address, total_score, review_list, match):
+def total_table_insert(k, total_table, forpet_hash, search_name, shop_address, address, total_score, review_list, match):
     if len(total_table[total_table['address']== address]) == 0:
         # shop 정보가 없고, total_sclre가 없는 경우
         if total_score == '':
-            total_table.loc[len(total_table)+1] = [forpet_hash, search_name, shop_address,  address, np.nan, np.nan, match]
+            total_table.loc[len(total_table)+1] = [k, forpet_hash, search_name, shop_address,  address, np.nan, np.nan, match]
         # shop 정보가 있고, total_score가 있는 경우
         elif total_score == 0:
-            total_table.loc[len(total_table)+1] = [forpet_hash, search_name, shop_address, address, 0, 0, match]
+            total_table.loc[len(total_table)+1] = [k, forpet_hash, search_name, shop_address, address, 0, 0, match]
 
         #total score이 없는 경우
         else:
-            total_table.loc[len(total_table)+1] = [forpet_hash, search_name, shop_address, address,total_score, len(review_list), match]
+            total_table.loc[len(total_table)+1] = [k, forpet_hash, search_name, shop_address, address,total_score, len(review_list), match]
         print(f'total_table: {search_name}, {address} 등록완료')
     else:
         print(f'total_table: {search_name}, {address} 이미 있음')
     return total_table
 
-def review_table_insert(review_table, forpet_hash, search_name, shop_address, address, review_list, score_list, match):
+def review_table_insert(k, review_table, forpet_hash, search_name, shop_address, address, review_list, score_list, match):
     if len(review_table[review_table['address']== address]) == 0:
         # shop 정보가 없고, total_sclre가 없는 경우
         if review_list == '':
-            review_table.loc[len(review_table)+1] = [forpet_hash, search_name, shop_address, address, 1,  np.nan, np.nan, match]
+            review_table.loc[len(review_table)+1] = [k, forpet_hash, search_name, shop_address, address, 1,  np.nan, np.nan, match]
             print(f'review_table: {search_name}, {address} 등록완료')
 
         # shop 정보가 있고, total_score가 있는 경우
         elif review_list == 0:
-            review_table.loc[len(review_table)+1] = [forpet_hash, search_name, shop_address, address, 1, 0, 0, match]
+            review_table.loc[len(review_table)+1] = [k, forpet_hash, search_name, shop_address, address, 1, 0, 0, match]
             print(f'review_table: {search_name}, {address} 등록완료')
 
         #total score이 없는 경우
         else:
             for i, (review, score, match) in enumerate(zip(review_list, score_list, match)):
-                review_table.loc[i+1+len(review_table)] = [forpet_hash, search_name, shop_address, address, i, review, score, match]
+                review_table.loc[i+1+len(review_table)] = [k, forpet_hash, search_name, shop_address, address, i, review, score, match]
             print(f'review_table: {search_name}, {address}, {len(review_list)} 등록완료')
     else:
         print(f'review_table: {search_name}, {address} 이미 있음')
@@ -311,8 +312,8 @@ def review_table_insert(review_table, forpet_hash, search_name, shop_address, ad
     return review_table
 
 
-def not_info_table_insert(not_info_table, forpet_hash, shop_name, match):
-    not_info_table.loc[1+len(not_info_table)] = [forpet_hash, shop_name, match]
+def not_info_table_insert(k, not_info_table, forpet_hash, shop_name, match):
+    not_info_table.loc[1+len(not_info_table)] = [k, forpet_hash, shop_name, match]
     print(f'not_info_table: {shop_name} 등록완료')
     return not_info_table
 
@@ -321,14 +322,23 @@ def not_info_table_insert(not_info_table, forpet_hash, shop_name, match):
 
 if __name__=='__main__':
 	ordinary_table = pd.read_csv('./data/mysql_forpet_shop.csv', index_col = 0)
-	not_match_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
-	match_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
-	x_total_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
-	not_match_review_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
-	match_review_table= pd.DataFrame(columns = ['forpet_hash','shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
-	x_review_table= pd.DataFrame(columns = ['forpet_hash', 'shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
-	not_info_table = pd.DataFrame(columns = ['forpet_hash', 'shop_name', 'match'])
+	not_match_total_table= pd.DataFrame(columns = ['num','forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
+	match_total_table= pd.DataFrame(columns = ['num','forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
+	x_total_table= pd.DataFrame(columns = ['num','forpet_hash', 'shop_name', 'shop_address', 'address','total_score', 'review_num','match'])
+	not_match_review_table= pd.DataFrame(columns = ['num','forpet_hash', 'shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
+	match_review_table= pd.DataFrame(columns = ['num','forpet_hash','shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
+	x_review_table= pd.DataFrame(columns = ['num','forpet_hash', 'shop_name','shop_address','address', 'num', 'review', 'score', 'match'])
+	not_info_table = pd.DataFrame(columns = ['num','forpet_hash', 'shop_name', 'match'])
 
+	# not_match_total_table= pd.DataFrame('./data/not_match_total_table', index_col = 0)
+	# match_total_table= pd.DataFrame('./data/match_total_table', indxe_col = 0)
+	# x_total_table= pd.DataFrame('./data/x_total_table', indxe_col = 0))
+	# not_match_review_table= pd.DataFrame('./data/not_match_review_table', indxe_col = 0))
+	# match_review_table= pd.DataFrame('./data/match_review_table', indxe_col = 0))
+	# x_review_table= pd.DataFrame('./data/x_review_table', indxe_col = 0))
+	# not_info_table = pd.DataFrame('./data/not_info_table', indxe_col = 0))
+
+	
 	SCROLL_PAUSE_TIME = 2
 
 	driver = webdriver.Chrome('chromedriver.exe')
@@ -342,7 +352,7 @@ if __name__=='__main__':
 	element = driver.find_element_by_xpath('//h3[@class="LC20lb DKV0Md"]')
 	element.click()
 
-	for k in range( len(ordinary_table)):
+	for k in range(1000):
 		forpet_hash, address_name, place_name= ordinary_table.loc[k] 
 	
 		shop_address =address_name.split(' ')[1:]
@@ -357,7 +367,7 @@ if __name__=='__main__':
 			pass
 		time.sleep(2)
 
-		if k % 100 == 0:
+		if k % 30 == 0:
 			match_total_table.to_csv('./data/match_total_table.csv')
 			not_match_total_table.to_csv('./data/not_match_total_table.csv')
 			match_review_table.to_csv('./data/match_review_table.csv')
