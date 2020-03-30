@@ -352,7 +352,8 @@ if __name__=='__main__':
 	element = driver.find_element_by_xpath('//h3[@class="LC20lb DKV0Md"]')
 	element.click()
 
-	for k in range(1000):
+	number = 7
+	for k in range(4030, 5000):
 		forpet_hash, address_name, place_name= ordinary_table.loc[k] 
 	
 		shop_address =address_name.split(' ')[1:]
@@ -368,13 +369,13 @@ if __name__=='__main__':
 		time.sleep(2)
 
 		if k % 30 == 0:
-			match_total_table.to_csv('./data/match_total_table.csv')
-			not_match_total_table.to_csv('./data/not_match_total_table.csv')
-			match_review_table.to_csv('./data/match_review_table.csv')
-			not_match_review_table.to_csv('./data/not_match_review_table.csv')
-			x_total_table.to_csv('./data/x_total_table.csv')
-			x_review_table.to_csv('./data/x_review_table.csv')
-			not_info_table.to_csv('./data/not_info_table.csv') 
+			match_total_table.to_csv(f'./data/match_total_table{number}.csv')
+			not_match_total_table.to_csv(f'./data/not_match_total_table{number}.csv')
+			match_review_table.to_csv(f'./data/match_review_table{number}.csv')
+			not_match_review_table.to_csv(f'./data/not_match_review_table{number}.csv')
+			x_total_table.to_csv(f'./data/x_total_table{number}.csv')
+			x_review_table.to_csv(f'./data/x_review_table{number}.csv')
+			not_info_table.to_csv(f'./data/not_info_table{number}.csv') 
 
 
     
