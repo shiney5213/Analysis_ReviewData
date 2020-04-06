@@ -352,8 +352,8 @@ if __name__=='__main__':
 	element = driver.find_element_by_xpath('//h3[@class="LC20lb DKV0Md"]')
 	element.click()
 
-	number = 7
-	for k in range(4030, 5000):
+	number = 18
+	for k in range(6815, 8000):
 		forpet_hash, address_name, place_name= ordinary_table.loc[k] 
 	
 		shop_address =address_name.split(' ')[1:]
