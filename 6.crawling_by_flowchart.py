@@ -91,11 +91,20 @@ def start_crwarling(k, forpet_hash,shop_name, shop_address):
 
     # shop 이름 입력
     element = driver.find_element_by_xpath('//input[@autofocus="autofocus"]')
-    element.clear()
+    print(element)
+    time.sleep(1)
+    try:
+        element.clear()
+    except:
+        driver.back()
+        
+    time.sleep(1)
+
     
     search_word = shop_name + ' ' +shop_address[0]
 #     search_word = shop_name
     element.send_keys(search_word)
+    time.sleep(1)
     element.submit()
     
     search_button = driver.find_element_by_xpath('//button[@class="searchbox-searchbutton"]')
